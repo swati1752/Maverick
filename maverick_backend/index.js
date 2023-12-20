@@ -35,9 +35,8 @@ parser.on('data', (line) => {
 //   buffer.write(line.toString(), buffer.length, 'utf-8');
   dataArray.push(line);
     console.log(dataArray.length);
-    if(dataArray.length>6&&temp==1){   
+    if(dataArray.length%6==0&&temp==1){   
         final_data = sendDataToServer(dataArray);
-        temp=0
     }
 });
 app.post('/sensor_data', (req, res) => {
