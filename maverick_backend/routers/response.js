@@ -2,6 +2,12 @@ const express = require('express')
 const axios = require('axios')
 const router = new express.Router()
 
+// router.post('/data', (req, res) => {
+//     const data = req.body;
+//     console.log('Received data from NodeMCU:', data);
+//     // You can process the data or send a response back to the NodeMCU
+//     res.send('Data received successfully');
+//   });
 
 router.post('/getResponse' ,async (req, res) => {
     const data = req.body
