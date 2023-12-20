@@ -31,17 +31,56 @@ const dataArray = [];
 let temp=1
 parser.on('data', (line) => {
   console.log(`Received: ${line}`);
-        // setTimeout(10000);
-//   buffer.write(line.toString(), buffer.length, 'utf-8');
   dataArray.push(line);
     console.log(dataArray.length);
     if(dataArray.length%6==0&&temp==1){   
         final_data = sendDataToServer(dataArray);
     }
 });
-app.post('/sensor_data', (req, res) => {
-    console.log(final_data);
-    res.send(final_data);
+// app.post('/sensor_data', (req, res) => {
+//     try {
+//         console.log(final_data);
+//         res.status(200).send(final_data);
+//     } catch(e) {
+//         res.status(400).send(e)
+//     }
+    
+// });
+
+app.post('/getResponse' ,async (req, res) => {
+    const data = final_data
+    try {
+        const resp = await axios.post('http://127.0.0.1:5000',data );
+        // console.log('ad')
+        // {
+        //     "sweet":54,
+        //     "sour":65,
+        //     "pungent":87,
+        //     "bitterness":89,
+        //     "option":0
+        // }
+        console.log(resp.data)
+        res.status(201).send(resp.data);
+    } catch (e) {
+        console.log(e)
+        res.status(400).send(e)
+    }
+})
+
+app.post('/recommendation', (req, res) => {
+    try {
+        if(taste.sweet>req.body.bitter&&req.body.sweet>req.body.sour){
+            res.send("Anti-inflammatory, Anti-oxidant, manage diabetes, protect against cancer, Anti-bacterial, reduce cholestrol level, anti-fungal.")
+        }
+        else if(req.body.sour>req.body.bitter&&req.body.sour>req.body.sweet){
+            res.send("Anti-oxidant , improve heart health, digestive health, lower oxidative stress.")
+        }
+        else{
+            res.send("Anti-inflammatory, Anti-oxidant, helps with digestive problem, anti-microbial, kidney health, balance blood sugar level.")
+        }
+    } catch(e) {
+        res.status(400).send(e)
+    }
 });
 // parser.on('end', () => {
 //     // All data has been read
